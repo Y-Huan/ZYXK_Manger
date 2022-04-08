@@ -130,6 +130,26 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/course',
+    component: Layout,
+    redirect: '/course/index',
+    name:'course',
+    meta:{
+      icon: 'kecheng',
+      title:'课程管理'
+
+    },
+    children: [
+
+      {
+        path: 'course',
+        component: () => import('@/views/course/index'),
+        name: 'courseIndex',
+        meta: { title: '课程管理'}
+      }
+    ]
+  },
+  {
     path: '/user',
     component: Layout,
     redirect: '/user/index',

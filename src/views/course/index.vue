@@ -17,19 +17,28 @@
           height="100%"
           style="width: 100%">
           <el-table-column
-            prop="collegeName"
-            label="分院名称">
+            prop="courseName"
+            label="课程名称">
           </el-table-column>
           <el-table-column
-            prop="dean"
-            label="院长"
+            prop="majorName"
+            label="所属专业"
             width="500">
           </el-table-column>
           <el-table-column
-            prop="deanPhone"
-            label="院长手机号"
+            label="课程类型"
             width="500">
+            <template slot-scope="scope">
+              <span>{{scope.row.courseType|coursetypeToString}}</span>
+            </template>
           </el-table-column>
+        <el-table-column
+          label="教学类型"
+          width="500">
+          <template slot-scope="scope">
+            <span>{{scope.row.teacherType|teacherypeToString}}</span>
+          </template>
+        </el-table-column>
           <el-table-column
             sortable
             prop="createTime"
@@ -37,24 +46,26 @@
             width="200">
           </el-table-column>
           <el-table-column label="操作" width="160" align="center">
-            <template slot-scope="scope">
+            <template slot-scope="scope" v-if="hasAuth('check')">
               <el-button
                 size="mini"
                 type="primary"
-                @click="handleEdit(scope.$index,scope.row.collegeId)">编辑</el-button>
+                @click="handleEdit(scope.$index,scope.row.collegeId)">审核</el-button>
+            </template>
+            <template slot-scope="scope" v-if="hasAuth('choose')">
               <el-button
                 size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index,scope.row.collegeId)">删除</el-button>
+                type="primary"
+                @click="handleEdit(scope.$index,scope.row.collegeId)">选择</el-button>
             </template>
           </el-table-column>
         </el-table>
     </div>
-    <!-- 新增学校 -->
-    <el-dialog title="新增/编辑分院" :visible.sync="show_dialog" width="650px">
-      <el-form :model="college_form">
-        <el-form-item label="分院名称" label-width="120px" required>
-          <el-input v-model.trim="college_form.collegeName" clearable placeholder="请输入学校名称" maxlength="30" style="width: 400px;"></el-input>
+    <!-- 新增待审核课程 -->
+    <el-dialog title="新增待审核课程" :visible.sync="show_dialog" width="650px">
+      <el-form :model="course_form">
+        <el-form-item label="课程名称" label-width="120px" required>
+          <el-input v-model.trim="course_form.courseName" clearable placeholder="请输入学校名称" maxlength="30" style="width: 400px;"></el-input>
         </el-form-item>
         <el-form-item label="院长" label-width="120px" >
           <el-select v-model="teacher" placeholder="请选择分院院长" style="width: 400px;"  filterable>
@@ -101,14 +112,33 @@
         teachers:[],
         teacherList:[],
         show_dialog:false,
-        college_form:{
+        course_form:{
           collegeName:'',
           dean:''
         }
       }
     },
+    computed:{
+      hasAuth(val){
+        return this.$store.state.authorityPermission.some(el=>{
+          return el.authorityPermission == val
+        })
+      }
+    },
     mounted() {
       this.getList();
+
+
+    },
+    filters: {
+      coursetypeToString(val) {
+        if (val == 2) return '公共选修课';
+        if (val == 1) return '专业选修课';
+      },
+      teacherypeToString(val){
+        if (val == 2) return '线下教学';
+        if (val == 1) return '线上网课';
+      }
     },
     methods:{
       getList(page){
@@ -127,7 +157,7 @@
         this.college_name = '';
       },
       open_add_college(){
-        this.college_form={
+        this.course_form={
           collegeName:'',
           bean:''
         }
@@ -141,14 +171,14 @@
         this.show_dialog = true;
       },
       add_college(){
-        var data =this.college_form;
-        if(!this.college_form.collegeName){
+        var data =this.course_form;
+        if(!this.course_form.collegeName){
           this.$message.error('请输入学校名称');
           return
         }
         data.dean = this.teacher;
         console.log(data)
-        if(!this.college_form.collegeId){
+        if(!this.course_form.collegeId){
           creatCollege(data).then(res=>{
             this.$message.success('添加成功');
             this.getList();
@@ -157,8 +187,8 @@
         }else{
           editCollege(data).then(res=>{
             this.$message.success('保存成功');
-            this.collegeList[this.editIndex].collegeName = this.college_form.collegeName;
-            this.collegeList[this.editIndex].bean = this.college_form.bean;
+            this.collegeList[this.editIndex].collegeName = this.course_form.collegeName;
+            this.collegeList[this.editIndex].bean = this.course_form.bean;
             this.show_dialog = false;
             this.$forceUpdate();
           })
@@ -170,7 +200,7 @@
           collegeId:id
         }
         getCollege(data).then(res=>{
-          this.college_form={
+          this.course_form={
             collegeName:res.collegeName,
             collegeId:res.collegeId
           }
