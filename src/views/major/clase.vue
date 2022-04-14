@@ -46,17 +46,11 @@
           <el-table-column label="操作" width="400" align="center">
 
             <template slot-scope="scope">
-              <el-upload
-                style="width: 100px;"
-                class="upload-demo"
-                :show-file-list="false"
-                :headers="{token:token}"
-                :action="excelPutUrl"
-                :data="{claseId:scope.row.claselId}"
-                :on-success="uploadSuccess"
-              >
-                <el-button size="small" type="primary" icon="el-icon-download" style="width: 89px; height: 36px;">学生信息导入</el-button>
-              </el-upload>
+
+              <el-button
+                size="mini"
+                type="primary"
+                @click="claseDetail(scope.$index,scope.row.claseId)">管理班级</el-button>
 
               <el-button
                 size="mini"
@@ -214,6 +208,9 @@
             this.getList();
           })
         }
+      },
+      claseDetail(index,id){
+        this.$router.push('/major/claseDetail/'+id);
       },
       handleEdit(index,id){
         this.editIndex = index;

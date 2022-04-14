@@ -143,7 +143,7 @@
         schoolList:[],
         schoolId:'',
         roleList:[],
-        roles:[],
+        roles:'',
         roleId:'',
         total:0,
         current:1,
@@ -266,8 +266,9 @@
             teacherId:id
           }
           this.schoolId = res.schoolId;
-          if(res.roleIds){
-            this.roles = res.roleIds.split(',');
+          if(res.roleId){
+            this.roles = res.roleId;
+            this.$forceUpdate();
           }
           var data = {
             pageNo:1,

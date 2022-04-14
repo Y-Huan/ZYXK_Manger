@@ -126,6 +126,13 @@ export const asyncRoutes = [
         component: () => import('@/views/major/clase'),
         name: 'majorClaes',
         meta: { title: '班级管理'}
+      },
+      {
+        path: 'claseDetail/:id',
+        hidden:true,
+        component: () => import('@/views/major/claseDetail'),
+        name: 'claseDetail',
+        meta: { title: '班级详情'}
       }
     ]
   },

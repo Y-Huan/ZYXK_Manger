@@ -1,15 +1,22 @@
 import http from '../utils/htpp'
-//获取学校列表
-export function claseList(params) {
-  return http.post('/clase/list', params);
+//获取课程列表
+export function courseList(params) {
+  return http.get('/course/list', params);
 }
-//创建学校
-export function creatClase(params) {
-  return http.post('/clase/add', params);
+export function studentCourseList(params) {
+  return http.get('/course/student/courseList', params);
 }
-//修改公司信息
-export function editClase(params) {
-  return http.post('/clase/update', params);
+//创建课程
+export function addCourse(params) {
+  return http.post('/course/add', params);
+}
+//审核课程
+export function checkCourse(params) {
+  return http.post('/course/checkCourse', params);
+}
+//创建课程
+export function studentChoiceCourse(params) {
+  return http.post('/course/choice', params);
 }
 //查看班级信息
 export function getClase(params) {

@@ -11,7 +11,8 @@ export function isExternal(path) {
  * @returns {Boolean}
  */
 export function validPhone(str) {
-  return /1[0-9]{10}/.test(str);
+  // return /1[0-9]{10}/.test(str);
+  return true;
 }
 
 /**
@@ -80,3 +81,6 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
+
+
+
